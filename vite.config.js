@@ -3,7 +3,7 @@ import tailwindcss from "@tailwindcss/vite";
 import vue from "@vitejs/plugin-vue";
 
 export default defineConfig({
-  base: "/compression_webp/",
+  base: "./",
   plugins: [vue(), tailwindcss()],
   server: {
     port: 5173,

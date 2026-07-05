@@ -220,147 +220,6 @@
         </div>
       </Teleport>
 
-      <!-- 反馈弹窗 -->
-      <Teleport to="body">
-        <div
-          v-if="showFeedbackDialog"
-          class="fixed inset-0 z-[60] flex items-center justify-center p-4"
-        >
-          <div
-            class="absolute inset-0 bg-black/50"
-            @click="closeFeedbackDialog"
-          />
-          <div class="relative w-full max-w-md overflow-hidden rounded-2xl bg-white shadow-xl">
-            <div class="flex items-center justify-between border-b border-gray-100 px-6 py-4">
-              <div class="flex items-center gap-2">
-                <div
-                  class="flex h-8 w-8 items-center justify-center rounded-full"
-                  style="background: linear-gradient(135deg, #7c6ef2, #a78bfa)"
-                >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                    <path
-                      d="M8 10H16M8 14H13M6.2 19.8L6.7 16.3C6.76 15.87 6.97 15.48 7.29 15.2L17.2 6.52C17.91 5.9 18.98 5.94 19.64 6.6V6.6C20.36 7.32 20.34 8.49 19.58 9.18L9.16 18.61C8.88 18.87 8.53 19.04 8.15 19.1L6.2 19.8Z"
-                      stroke="white"
-                      stroke-width="1.8"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
-                </div>
-                <h2 class="text-lg font-bold text-gray-900">用户反馈</h2>
-              </div>
-              <button
-                type="button"
-                title="关闭"
-                class="flex h-8 w-8 items-center justify-center rounded-full text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700"
-                @click="closeFeedbackDialog"
-              >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                  <path
-                    d="M6 6L18 18M18 6L6 18"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                  />
-                </svg>
-              </button>
-            </div>
-
-            <form class="space-y-5 p-6" @submit.prevent="submitFeedback">
-              <div>
-                <label class="mb-2 block text-sm font-semibold text-gray-900">
-                  反馈内容 <span class="text-red-500">*</span>
-                </label>
-                <textarea
-                  v-model="feedbackForm.content"
-                  rows="4"
-                  required
-                  placeholder="请输入您的反馈..."
-                  class="w-full resize-none rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-800 outline-none transition focus:border-[#7c6ef2] focus:ring-2 focus:ring-[#7c6ef2]/15"
-                />
-              </div>
-
-              <div>
-                <label class="mb-2 block text-sm font-semibold text-gray-900">
-                  联系方式 <span class="font-normal text-gray-400">(选填)</span>
-                </label>
-                <input
-                  v-model="feedbackForm.contact"
-                  type="text"
-                  placeholder="邮箱或电话"
-                  class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm text-gray-800 outline-none transition focus:border-[#7c6ef2] focus:ring-2 focus:ring-[#7c6ef2]/15"
-                />
-              </div>
-
-              <div>
-                <label class="mb-2 block text-sm font-semibold text-gray-900">
-                  评分
-                </label>
-                <select
-                  v-model.number="feedbackForm.rating"
-                  class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm text-gray-800 outline-none transition focus:border-[#7c6ef2] focus:ring-2 focus:ring-[#7c6ef2]/15"
-                >
-                  <option :value="5">⭐⭐⭐⭐⭐ 非常满意</option>
-                  <option :value="4">⭐⭐⭐⭐ 满意</option>
-                  <option :value="3">⭐⭐⭐ 一般</option>
-                  <option :value="2">⭐⭐ 不满意</option>
-                  <option :value="1">⭐ 非常不满意</option>
-                </select>
-              </div>
-
-              <button
-                type="submit"
-                :disabled="feedbackSubmitting"
-                class="flex w-full items-center justify-center gap-2 rounded-xl py-3 text-sm font-bold text-white transition-all disabled:cursor-not-allowed disabled:opacity-60"
-                :style="{
-                  background: feedbackSubmitting
-                    ? 'linear-gradient(135deg, #a78bfa, #c4b5fd)'
-                    : 'linear-gradient(135deg, #7c6ef2, #a78bfa)',
-                  boxShadow: feedbackSubmitting
-                    ? 'none'
-                    : '0 4px 14px rgba(124, 110, 242, 0.3)',
-                }"
-              >
-                <svg
-                  v-if="feedbackSubmitting"
-                  class="h-4 w-4 animate-spin"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                >
-                  <circle
-                    cx="12"
-                    cy="12"
-                    r="9"
-                    stroke="white"
-                    stroke-width="3"
-                    stroke-opacity="0.3"
-                  />
-                  <path
-                    d="M21 12A9 9 0 0012 3"
-                    stroke="white"
-                    stroke-width="3"
-                    stroke-linecap="round"
-                  />
-                </svg>
-                {{ feedbackSubmitting ? "提交中..." : "提交反馈" }}
-              </button>
-
-              <div
-                v-if="feedbackMessage"
-                class="rounded-lg border px-4 py-2 text-center text-sm"
-                :class="
-                  feedbackMessageType === 'success'
-                    ? 'border-green-200 bg-green-50 text-green-700'
-                    : 'border-red-200 bg-red-50 text-red-700'
-                "
-              >
-                {{ feedbackMessage }}
-              </div>
-            </form>
-          </div>
-        </div>
-      </Teleport>
-
       <!-- 设置 2x2 网格 -->
       <div class="grid grid-cols-2 gap-4 mb-5">
         <!-- 帧处理 -->
@@ -678,28 +537,8 @@
     </div>
 
     <div class="fixed bottom-6 right-6 z-50 flex flex-col gap-3">
-      <button
-        type="button"
-        title="用户反馈"
-        class="flex h-11 w-11 items-center justify-center rounded-2xl shadow-lg transition-transform hover:scale-110"
-        style="background: linear-gradient(135deg, #7c6ef2, #a78bfa)"
-        @click="openFeedbackDialog"
-      >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-          <path
-            d="M8 10H16M8 14H13M7 19L4.8 20.1C4.46 20.27 4.07 19.98 4.14 19.61L4.61 16.83C4.68 16.4 4.55 15.96 4.26 15.63C3.47 14.72 3 13.53 3 12.24C3 8.79 6.13 6 10 6H14C17.87 6 21 8.79 21 12.24C21 15.69 17.87 18.48 14 18.48H10.78C10.15 18.48 9.53 18.66 9 19L7 19Z"
-            stroke="white"
-            stroke-width="1.8"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
-      </button>
-
       <a
         :href="HOME_PAGE_URL"
-        target="_blank"
-        rel="noopener noreferrer"
         title="返回首页"
         class="flex h-11 w-11 items-center justify-center rounded-2xl shadow-lg transition-transform hover:scale-110"
         style="background: #3370ff"
@@ -749,8 +588,7 @@ import Draggable from "vuedraggable";
 import { createFFmpegClient, getFetchFile } from "./lib/ffmpegClient";
 import { patchWebPDisposal } from "./lib/patchWebPDisposal";
 
-const FEEDBACK_API_URL = "http://101.200.38.189:3000/api/feedback";
-const HOME_PAGE_URL = "https://lethe222.github.io/Design-tool-collection-website/#";
+const HOME_PAGE_URL = "/";
 
 const fileInput = ref(null);
 const dragOver = ref(false);
@@ -771,15 +609,6 @@ const compressionLevel = ref(6);
 
 const showReplaceDialog = ref(false);
 const pendingFiles = ref([]);
-const showFeedbackDialog = ref(false);
-const feedbackSubmitting = ref(false);
-const feedbackMessage = ref("");
-const feedbackMessageType = ref("success");
-const feedbackForm = ref({
-  content: "",
-  contact: "",
-  rating: 3,
-});
 
 const ffmpeg = shallowRef(null);
 const isProcessing = ref(false);
@@ -857,71 +686,6 @@ function clearAllFrames() {
     if (f?.url) URL.revokeObjectURL(f.url);
   }
   frames.value = [];
-}
-
-function resetFeedbackState() {
-  feedbackMessage.value = "";
-  feedbackMessageType.value = "success";
-}
-
-function openFeedbackDialog() {
-  resetFeedbackState();
-  showFeedbackDialog.value = true;
-}
-
-function closeFeedbackDialog() {
-  if (feedbackSubmitting.value) return;
-  showFeedbackDialog.value = false;
-}
-
-async function submitFeedback() {
-  if (!feedbackForm.value.content.trim()) {
-    feedbackMessage.value = "请输入反馈内容";
-    feedbackMessageType.value = "error";
-    return;
-  }
-
-  feedbackSubmitting.value = true;
-  feedbackMessage.value = "";
-
-  try {
-    const response = await fetch(FEEDBACK_API_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        content: feedbackForm.value.content,
-        contact: feedbackForm.value.contact,
-        rating: feedbackForm.value.rating,
-      }),
-    });
-
-    const result = await response.json();
-
-    if (result.success) {
-      feedbackMessage.value = "反馈提交成功！感谢您的反馈";
-      feedbackMessageType.value = "success";
-      feedbackForm.value = {
-        content: "",
-        contact: "",
-        rating: 3,
-      };
-      window.setTimeout(() => {
-        showFeedbackDialog.value = false;
-      }, 1500);
-      return;
-    }
-
-    feedbackMessage.value = result.message || "提交失败,请重试";
-    feedbackMessageType.value = "error";
-  } catch (error) {
-    console.error("提交失败:", error);
-    feedbackMessage.value = "网络错误,请检查网络连接";
-    feedbackMessageType.value = "error";
-  } finally {
-    feedbackSubmitting.value = false;
-  }
 }
 
 function autoDetectFrameParams() {
